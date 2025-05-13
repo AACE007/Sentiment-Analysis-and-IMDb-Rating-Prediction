@@ -1,96 +1,65 @@
+# Sentiment Analysis and IMDb Rating Prediction Project Steps
 
-# Sentiment Analysis and IMDb Rating Prediction System
+## 1. Data Loading and Exploration
+- Loaded the IMDb dataset containing movie reviews and their sentiment labels
+- Performed exploratory data analysis (EDA) to check class distribution
+- Found balanced dataset with approximately 50% positive and 50% negative reviews
+- Analyzed text characteristics by calculating:
+  * Number of characters per review
+  * Number of words per review (using NLTK tokenizer)
+  * Number of sentences per review
+- Created correlation heatmap to identify relationships between features
 
-## Project Overview
-This project implements a sophisticated natural language processing (NLP) system that performs dual tasks:
-1. Classifying movie reviews as positive or negative (sentiment analysis)
-2. Predicting the numerical IMDb rating based on review content
+## 2. Text Preprocessing
+- Implemented comprehensive text cleaning pipeline:
+  * Removed HTML tags using regex
+  * Converted all text to lowercase
+  * Removed punctuation and numbers
+  * Eliminated single character words
+  * Removed stopwords (common words like "the", "and", "is")
+  * Stripped extra whitespace
+- Encoded sentiment labels (negative=0, positive=1)
+- Split dataset into training (80%) and testing (20%) sets
 
-The system leverages deep learning techniques, specifically LSTM (Long Short-Term Memory) networks, alongside pre-trained GloVe word embeddings to understand and quantify the sentiment expressed in movie reviews.
+## 3. Feature Engineering
+- Created a tokenizer trained on the vocabulary of the training set
+- Converted text reviews to sequences of numbers (word indices)
+- Padded sequences to ensure uniform length (100 tokens)
+- Loaded pre-trained GloVe word embeddings (100-dimensional vectors)
+- Created an embedding matrix mapping each word in our vocabulary to its GloVe vector
 
-## Dataset Description
-The IMDb dataset consists of three primary columns:
-- Movie Name: The title of the film being reviewed
-- Movie Review: The textual content of the review
-- IMDb Rating: The numerical rating (typically on a scale of 1-10)
+## 4. Model Development
+Implemented and compared multiple neural network architectures:
 
-This dataset provides a rich source of labeled data for both sentiment classification and rating prediction tasks.
+### 4.1 Simple Neural Network
+- Used GloVe embeddings (non-trainable)
+- Flattened the embedding outputs
+- Added a dense layer with sigmoid activation
+- Achieved 74.7% test accuracy
 
-## Implementation Architecture
+### 4.2 Convolutional Neural Network (CNN)
+- Added a 1D convolutional layer (128 filters)
+- Used Global Max Pooling to reduce dimensionality
+- Achieved 84.9% test accuracy
 
-### 1. Data Preprocessing Pipeline
-The preprocessing stage transforms raw review text into a format suitable for deep learning models:
+### 4.3 Long Short-Term Memory (LSTM) Network
+- Implemented LSTM layer with 128 units
+- Added dropout (0.4) to prevent overfitting
+- Trained for 20 epochs
+- Achieved 84.7% test accuracy
 
-- **Text Cleaning**:
-  - Removal of HTML tags and special characters
-  - Removal of punctuation marks and digits
-  - Conversion to lowercase for uniformity
-  - Elimination of excessive whitespace
+### 4.4 Bi-Directional LSTM (not fully implemented in the snippet)
 
-- **Text Tokenization**:
-  - Splitting reviews into individual words/tokens
-  - Removal of stopwords (common words like "the", "is", "and")
-  - Setting a maximum sequence length for uniformity
+## 5. Model Improvement Techniques
+- Applied dropout regularization
+- Considered model depth increases (adding more LSTM layers)
+- Experimented with different hyperparameters
 
-- **Data Splitting**:
-  - Division of dataset into training (70%), validation (15%), and test (15%) sets
-  - Stratification by rating to ensure balanced distribution
+## 6. Evaluation on Live Data
+- Loaded unseen IMDb reviews
+- Applied the same preprocessing pipeline
+- Made predictions using the trained LSTM model
+- Scaled sentiment predictions to align with IMDb's 10-point rating scale
+- Created a comparison dataframe with movies, reviews, actual IMDb ratings, and predicted sentiments
 
-### 2. Feature Engineering with GloVe Embeddings
-- Used pre-trained GloVe (Global Vectors for Word Representation) embeddings (100-dimensional vectors)
-- Created an embedding matrix mapping each word in the vocabulary to its corresponding GloVe vector
-- Words not found in GloVe were initialized with random vectors
-- Implemented an embedding layer in the model that leverages these pre-trained vectors
-
-### 3. Model Architecture
-The system implements multiple neural network architectures:
-
-- **Main LSTM Model**:
-  - Embedding Layer: Initialized with pre-trained GloVe vectors
-  - LSTM Layer (128 units): Captures sequential relationships in text
-  - Dropout Layer (0.5): Prevents overfitting
-  - Dense Layer: With ReLU activation
-  - Output Layers:
-    - Binary classification head for sentiment (sigmoid activation)
-    - Regression head for rating prediction (linear activation)
-
-- **Bidirectional LSTM Variant**:
-  - Similar to the main model but uses Bidirectional LSTM to capture context from both directions
-  - Improved performance on complex sentiment expressions
-  - Used for comparison against the standard LSTM
-
-### 4. Training Process
-- **Loss Functions**:
-  - Binary cross-entropy for sentiment classification
-  - Mean squared error for rating prediction
-  - Combined loss with weighted contributions from both tasks
-
-- **Optimization**:
-  - Adam optimizer with learning rate of 0.001
-  - Batch size of 64 for efficient training
-  - Early stopping to prevent overfitting
-  - Learning rate reduction on plateau
-
-- **Training Duration**:
-  - 15 epochs with early stopping patience of 3
-  - Approximately 2 hours on GPU hardware
-
-### 5. Model Evaluation
-- **Sentiment Classification Metrics**:
-  - Accuracy: 84.7%
-  - Precision: 86.2%
-  - Recall: 83.9%
-  - F1-Score: 85.0%
-
-- **Rating Prediction Metrics**:
-  - Mean Absolute Error (MAE): 0.72
-  - Root Mean Squared Error (RMSE): 0.94
-  - R² Score: 0.67
-
-
-## Future Enhancements
-- Implementation of attention mechanisms to focus on sentiment-heavy portions of reviews
-- Experimentation with transformer-based models like BERT for potentially higher accuracy
-- Development of a genre-specific rating prediction system to account for genre-based rating variations
-- Incorporation of additional features like review length, publication date, and reviewer history
-
+The project successfully demonstrates how to build a sentiment analysis system that not only classifies reviews as positive or negative but also predicts numerical ratings based on text content.

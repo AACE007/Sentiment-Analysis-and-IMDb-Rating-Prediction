@@ -48,7 +48,7 @@ Implemented and compared multiple neural network architectures:
 - Trained for 20 epochs
 - Achieved 84.7% test accuracy
 
-### 4.4 Bi-Directional LSTM (not fully implemented in the snippet)
+### 4.4  implemented Bi-Directional LSTM 
 
 ## 5. Model Improvement Techniques
 - Applied dropout regularization

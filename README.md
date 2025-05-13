@@ -1,6 +1,3 @@
-# Sentiment-Analysis-and-IMDb-Rating-Prediction
-
-I'll develop a detailed description of your NLP-based system for sentiment analysis and IMDb rating prediction. Let me outline the complete architecture and implementation process.
 
 # Sentiment Analysis and IMDb Rating Prediction System
 
